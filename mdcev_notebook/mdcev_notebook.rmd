@@ -11,7 +11,7 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-document provides some exploration of the Multiple-Discrete Continuous
+This document provides some exploration of the Multiple-Discrete Continuous
 Extreme Value (MDCEV) model. It follows the notation in [this R Journal article](https://journal.r-project.org/archive/2021/RJ-2021-015/index.html) 
 for the package `rmdcev`, authored by
 [Patrick Lloyd-Smith](https://plloydsmith.github.io). 
