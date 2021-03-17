@@ -1,0 +1,95 @@
+---
+title: "Life History"
+author: "Zander Gordan"
+date: "3/17/2021"
+output: html_document
+runtime: shiny
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document provides some useful visualizations to understand functions which are used in the biological literature on the life history of fish.
+
+To start, I go through the functions in the paper [Life history demographic parameter synthesis for exploited Florida and Caribbean coral reef fishes](https://onlinelibrary.wiley.com/doi/full/10.1111/faf.12405).
+
+## Lifetime Growth
+
+The "von Bertalanffy (1938) length dependent on age $L(a)$ growth function" models the relationship between a fish's age and its length as a truncated sigmoid function:
+
+$$ L(a) = L_{\infty} \left( 1 - e^{-K(a-a_0)} \right) $$
+
+Where $L_\infty$ is the mean asymptotic length, K is the "Brody growth coefficient" / scale parameter, and $a_0$ is the "theoretical age at length 0".
+
+```{r}
+L <- function(a, L_infty, K, a_0) {
+  L_infty * (1 - exp(-K * (a - a_0)))
+}
+```
+
+```{r L_viz, echo=FALSE}
+inputPanel(
+  sliderInput("L_infty", label = "Asymptotic Length (mm Fork Length)",
+              min = 0, max = 2500, value = 1000),
+  
+  sliderInput("K", label = "Brody Growth Coefficient",
+              min = 0, max = 1.5, value = 0.2),
+  
+  sliderInput("a_0", label = "Theoretical age at length 0",
+              min = -5, max = 0, value = -1)
+)
+
+renderPlot({
+  
+  plot(seq(0, 50, 0.1),
+       L(seq(0, 50, 0.1), L_infty = input$L_infty, K = input$K, a_0 = input$a_0),
+       type = "l")
+    })
+```
+
+In this visualization, I have set the range of parameter values to correspond to the observed range of estimated parameters in Table 5 of the paper. 
+
+If, like me, you find the concept of "theoretical age at length 0" to be a bit confusing, it's useful to realize that you can also parameterize the function in terms of "length at age 0", $L_0$. To see this, restate the formula replacing $a_0$ with an $x$, and set the expression equal to the new parameter:
+
+$$ L_0 = L_{\infty} \left( 1 - e^{-K(a + x)} \right) $$
+
+Now, solving for $x$ gives us:
+
+$$ x = \frac{- \ln \left( 1 - \frac{L_0}{L_\infty} \right)}{K} $$
+
+```{r}
+L_alt <- function(a, L_infty, K, L_0) {
+  x <- - log(1 - (L_0 / L_infty)) / K
+  L_infty * (1 - exp(-K * (a + x)))
+}
+```
+
+```{r L_alt_viz, echo=FALSE}
+inputPanel(
+  sliderInput("l_infty", label = "Asymptotic Length (mm Fork Length)",
+              min = 0, max = 2500, value = 1000),
+  
+  sliderInput("K", label = "Brody Growth Coefficient",
+              min = 0, max = 1.5, value = 0.2),
+  
+  sliderInput("L_0", label = "Length at Age 0",
+              min = 0, max = 2500, value = 1)
+)
+
+renderPlot({
+  
+  plot(seq(0, 50, 0.1),
+       L_alt(seq(0, 50, 0.1), L_infty = input$L_infty, K = input$K, L_0 = input$L_0),
+       type = "l")
+    })
+```
+
+There is always a value of $L_0$ which corresponds to a value of $a_0$, as can be confirmed informally by comparing this visualization to the initial one. For instance, with the default values of 1000 mm asymptotic length and 0.2 growth coefficient, an "age at length 0" of -1 is equivalent to a "length at age 0" of 181 mm. This alternate parameterization has the obvious drawback of relying on the compound parameter $x$ in the formula, which I suppose might make likelihood functions or other derived expressions much more grotesque. However, it has the advantage of not having to put up with a contrivance like "theoretical age at length 0".
+
+
+
+
+
+
