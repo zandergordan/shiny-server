@@ -86,7 +86,7 @@ renderPlot({
     })
 ```
 
-There is always a value of $L_0$ which corresponds to a value of $a_0$, as can be confirmed informally by comparing this visualization to the initial one. For instance, with the default values of 1000 mm asymptotic length and 0.2 growth coefficient, an "age at length 0" of -1 is equivalent to a "length at age 0" of 181 mm. This alternate parameterization has the obvious drawback of relying on the compound parameter $x$ in the formula, which I suppose might make likelihood functions or other derived expressions much more grotesque. However, it has the advantage of not having to put up with a contrivance like "theoretical age at length 0".
+There is always a value of $L_0$ which corresponds to a value of $a_0$, as can be confirmed informally by comparing this visualization to the initial one. For instance, with the default values of 1000 mm asymptotic length and 0.2 growth coefficient, an "age at length 0" of -1 is equivalent to a "length at age 0" of 181 mm. This alternate parameterization has the obvious drawback of relying on the compound parameter $x$ in the formula, which I suppose might make likelihood functions or other derived expressions much more grotesque. However, it has the advantage of not having to put up with a contrivance like "theoretical age at length 0". I can also imagine that the parameterization I've provided here might be objected to on the grounds that the estimated value $\widehat{L_0}$ may tend to not be a good predictor of length at birth. Though in fact, if true, that would be an argument *for* this parameterization, at least as a pedagogical tool, since it may prompt discussions that help students internalize the notion that "all models are wrong, some are useful."
 
 
 
